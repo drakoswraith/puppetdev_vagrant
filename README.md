@@ -1,6 +1,12 @@
 # Puppet Dev Environment
 Multi VM development environment for Puppet testing using VirtualBox
 
+Puppetserver will be configured to autosign CA cert requests for *.local machines, and agents in this Vagrantfile will be registered with the puppet.local server.
+
+TODO
+- PuppetDB
+- Inital playbooks (what does puppet call them?)
+
 
 # VMs
 - puppet server
@@ -27,7 +33,7 @@ Example:
 ````
 
 
-# BOX Configuration
+# Vagrant BOX Configuration
 Built and tested with Centos7 base box from 
 https://github.com/drakoswraith/centos7_virtualboxiso_packer
 

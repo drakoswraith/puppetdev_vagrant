@@ -12,3 +12,11 @@ crash.log
 manifest.json
 manifest.json.lock
 output-centos7
+.ssh
+*id_rsa.pub
+puppet_commands.txt
+notes.txt
+
+# Ignore puppet modules being developed below this
+modules
+

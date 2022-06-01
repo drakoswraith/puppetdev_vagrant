@@ -36,4 +36,14 @@ Vagrant.configure("2") do |config|
       /vagrant/puppet_provision/puppet_agent.sh
     SHELL
   end
+
+  config.vm.define :db do |web|
+    web.vm.hostname = "db.local"
+    web.vm.network "private_network", ip: "192.168.52.102", nic_type: "virtio", virtualbox__intnet: "puppetnetwork"
+    web.vm.network "forwarded_port", guest: 22, host: 52222, host_ip: '127.0.0.1', protocol: 'tcp'
+    web.vm.provision "shell", inline: <<-SHELL
+      /vagrant/puppet_provision/common.sh
+      /vagrant/puppet_provision/puppet_agent.sh
+    SHELL
+  end
 end
