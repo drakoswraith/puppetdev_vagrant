@@ -5,7 +5,7 @@ Puppetserver will be configured to autosign CA cert requests for *.local machine
 
 TODO
 - PuppetDB
-- Inital playbooks (what does puppet call them?)
+- Inital puppet modules
 
 
 # VMs

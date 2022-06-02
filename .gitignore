@@ -17,6 +17,5 @@ output-centos7
 puppet_commands.txt
 notes.txt
 
-# Ignore puppet modules being developed below this
-modules
-
+modules/
+manifests/

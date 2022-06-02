@@ -1,4 +1,8 @@
 #!/bin/sh
+
+#update Sudoers to include Puppet path for vagrant user
+cat /vagrant/puppet_provision/vagrant.sudoers.d > /etc/sudoers.d/vagrant
+
 #Update Bash profile to add puppet to profile
 tee /root/.bash_profile <<'EOF'
 # .bash_profile
