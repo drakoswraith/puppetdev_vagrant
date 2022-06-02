@@ -16,6 +16,5 @@ output-centos7
 *id_rsa.pub
 puppet_commands.txt
 notes.txt
-
-modules/
-manifests/
+./modules/
+./manifests/

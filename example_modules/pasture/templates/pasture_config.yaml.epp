@@ -1,0 +1,10 @@
+# ensure no empty lines at top of any template files...
+#This file is managed by puppet. Do not make manual edits
+:default_character: <%= $default_animal %>
+:default_message: <%= $default_message %>
+<%- if $database != 'none' { -%>
+:db: <%= $database %>
+<%- } -%>
+:sinatra_settings:
+    :port: <%= $web_port %>
+    :server: <%= $web_server_pkg %>

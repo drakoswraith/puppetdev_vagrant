@@ -4,10 +4,14 @@ Vagrant.require_version ">=1.8"
 
 #Puppet Master Server
 Vagrant.configure("2") do |config|
+  if ENV['PDV_CONFIGEXAMPLES'] == 'true'
+    disable_examples = false
+  else
+    disable_examples = true
+  end
+  
   boxdir = ENV['VAGRANT_BOX_DIR']
   config.vm.box = "#{boxdir}/packer_centos7_virtualbox.box"
-
-  config.vm.provision "file", source: "puppet_provision", destination: "puppet_provision"
 
   config.vm.provider "virtualbox" do |v|
     v.linked_clone = true
@@ -21,6 +25,13 @@ Vagrant.configure("2") do |config|
     puppet.vm.hostname = "puppet.local"
     puppet.vm.network "private_network", ip: "192.168.52.100", nic_type: "virtio", virtualbox__intnet: "puppetnetwork"
     puppet.vm.network "forwarded_port", guest: 22, host: 52022, host_ip: '127.0.0.1', protocol: 'tcp'
+
+    # mount the example puppet modules and manifests for availability
+    config.vm.synced_folder "example_manifests", "/etc/puppetlabs/code/environments/example/manifests", create: true, disabled: disable_examples
+    config.vm.synced_folder "example_modules/pasture", "/etc/puppetlabs/code/environments/example/modules/pasture", create: true, disabled: disable_examples
+    config.vm.synced_folder "example_modules/nixmotd", "/etc/puppetlabs/code/environments/example/modules/nixmotd", create: true, disabled: disable_examples
+    config.vm.synced_folder "example_modules/funwithfacts", "/etc/puppetlabs/code/environments/example/modules/funwithfacts", create: true, disabled: disable_examples
+
     puppet.vm.provision "shell", inline: <<-SHELL
       /vagrant/puppet_provision/common.sh
       /vagrant/puppet_provision/puppet_server.sh

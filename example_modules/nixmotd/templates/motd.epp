@@ -1,0 +1,2 @@
+Welcome to <%= $facts['networking']['fqdn'] %>
+You are being watched! Do no wrong!

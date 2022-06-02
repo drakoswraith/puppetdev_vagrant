@@ -1,6 +1,11 @@
 #!/bin/sh
 yum -y install puppet-agent puppet-bolt
 /opt/puppetlabs/bin/puppet config set server puppet.local --section main
+
+if [ -d /etc/puppetlabs/code/environments/example/manifests ]; then
+    /opt/puppetlabs/bin/puppet config set environment example --section agent
+fi
+
 /opt/puppetlabs/bin/puppet ssl bootstrap || :
 /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
 

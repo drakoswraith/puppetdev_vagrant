@@ -66,23 +66,10 @@ ssh-keygen -P '' -f /root/.ssh/id_rsa
 # ------------------------------------------------------------------------------
 # Puppet Dev Code Setup
 # ------------------------------------------------------------------------------
-# Assumeses there is a "manifests" and "modules" dirs under the top level of this 
-# project, that will hold the puppet module projects being developed.
-# These folders are excluded from the project, and should be created in the project
-# manually, and have the module projects added below them as required.
-# 
-# not sure if this is the best way to do it yet...
-# need to check on applying code from "code/modules" vs. "environments/modules"
-
-
-#setup dev modules directory
-# skipping the manifests folder so that the agent VMs don't apply configs yet
-#if [ -d /vagrant/manifests ] ; then
-#  rmdir /etc/puppetlabs/code/environments/production/manifests
-#  ln -s /vagrant/manifests /etc/puppetlabs/code/environments/production/
-#fi
-
-if [ -d /vagrant/modules ] ; then
-  rmdir /etc/puppetlabs/code/environments/production/modules
-  ln -s /vagrant/modules /etc/puppetlabs/code/environments/production/
+# If the example modules were linked via Vagrant, then we will need some 
+# additional modules installed, etc..
+if [ -d /etc/puppetlabs/code/environments/example/modules ] ; then
+  sudo /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/environments/example/modules/ puppetlabs-postgresql
+  sudo /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/environments/example/modules/ puppetlabs-firewall
+  chown -R puppet:puppet /etc/puppetlabs/code/environments/example/
 fi
