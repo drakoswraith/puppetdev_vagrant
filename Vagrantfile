@@ -27,10 +27,7 @@ Vagrant.configure("2") do |config|
     puppet.vm.network "forwarded_port", guest: 22, host: 52022, host_ip: '127.0.0.1', protocol: 'tcp'
 
     # mount the example puppet modules and manifests for availability
-    config.vm.synced_folder "example_manifests", "/etc/puppetlabs/code/environments/example/manifests", create: true, disabled: disable_examples
-    config.vm.synced_folder "example_modules/pasture", "/etc/puppetlabs/code/environments/example/modules/pasture", create: true, disabled: disable_examples
-    config.vm.synced_folder "example_modules/nixmotd", "/etc/puppetlabs/code/environments/example/modules/nixmotd", create: true, disabled: disable_examples
-    config.vm.synced_folder "example_modules/funwithfacts", "/etc/puppetlabs/code/environments/example/modules/funwithfacts", create: true, disabled: disable_examples
+    puppet.vm.synced_folder "example_env", "/etc/puppetlabs/code/environments/example", create: true, disabled: disable_examples
 
     puppet.vm.provision "shell", inline: <<-SHELL
       /vagrant/puppet_provision/common.sh
@@ -46,15 +43,25 @@ Vagrant.configure("2") do |config|
       /vagrant/puppet_provision/common.sh
       /vagrant/puppet_provision/puppet_agent.sh
     SHELL
+    if ENV['PDV_CONFIGEXAMPLES'] == 'true'
+      web.vm.provision "shell", inline: <<-SHELL
+        /vagrant/puppet_provision/puppet_set_env.sh
+      SHELL
+    end
   end
 
-  config.vm.define :db do |web|
-    web.vm.hostname = "db.local"
-    web.vm.network "private_network", ip: "192.168.52.102", nic_type: "virtio", virtualbox__intnet: "puppetnetwork"
-    web.vm.network "forwarded_port", guest: 22, host: 52222, host_ip: '127.0.0.1', protocol: 'tcp'
-    web.vm.provision "shell", inline: <<-SHELL
+  config.vm.define :db do |db|
+    db.vm.hostname = "db.local"
+    db.vm.network "private_network", ip: "192.168.52.102", nic_type: "virtio", virtualbox__intnet: "puppetnetwork"
+    db.vm.network "forwarded_port", guest: 22, host: 52222, host_ip: '127.0.0.1', protocol: 'tcp'
+    db.vm.provision "shell", inline: <<-SHELL
       /vagrant/puppet_provision/common.sh
       /vagrant/puppet_provision/puppet_agent.sh
     SHELL
+    if ENV['PDV_CONFIGEXAMPLES'] == 'true'
+      db.vm.provision "shell", inline: <<-SHELL
+        /vagrant/puppet_provision/puppet_set_env.sh
+      SHELL
+    end
   end
 end
