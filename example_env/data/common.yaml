@@ -1,0 +1,16 @@
+profile::pasture::db::allowed_ip: '192.168.52.0/24'
+profile::pasture::db::listen:  '*'
+profile::pasture::db::port: 5432
+profile::pasture::db::db: 'pasturedb'
+profile::pasture::db::user: 'pasture'
+profile::pasture::db::pass: 'pasturepass'
+
+profile::pasture::app::server_pkg: 'thin'
+profile::pasture::app::port: 80
+profile::pasture::app::db_server: 'db.local'
+profile::pasture::app::db: 'pasturedb'
+profile::pasture::app::db_user: 'pasture'
+profile::pasture::app::db_pass: 'pasturepass'
+profile::pasture::app::default_character: 'cow'
+profile::pasture::app::default_message: 'Hello, Coders! You are the best!'
+profile::pasture::app::pasture_config: '/etc/pasture_config.yaml'

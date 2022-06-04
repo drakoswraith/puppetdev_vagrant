@@ -1,5 +1,5 @@
 class pasture::db (
-  $web_server = 'local',
+  $allowed_ip = 'local',
   $db_listen = '*',
   $db_port = '5432',
   $db = 'pasturedb',
@@ -21,7 +21,7 @@ class pasture::db (
     type => 'host',
     database => $db,
     user => $db_user,
-    address => $web_server,
+    address => $allowed_ip,
     auth_method => 'password',
   }
 }

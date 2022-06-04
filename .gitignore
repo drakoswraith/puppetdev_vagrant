@@ -8,6 +8,12 @@ crash.log
 *.box
 .vagrant
 
+#example_env module control... don't include externally loaded modules
+example_env/modules/*
+!example_env/modules/nixmotd
+!example_env/modules/pasture
+!example_env/modules/funwithfacts
+
 # Other
 manifest.json
 manifest.json.lock
@@ -16,5 +22,3 @@ output-centos7
 *id_rsa.pub
 puppet_commands.txt
 notes.txt
-./modules/
-./manifests/

@@ -1,10 +1,6 @@
 #!/bin/sh
 # https://puppet.com/docs/puppet/7/puppet_index.html
 
-#allow puppet traffic
-#firewall-cmd --add-port=8140/tcp
-#firewall-cmd --add-port=8140/tcp --perm
-
 # Install binaries and chown the config dir to prevent a permission issue
 yum -y install puppetserver
 chown -R puppet:puppet /etc/puppetlabs
@@ -56,12 +52,18 @@ mkdir -p /root/.ssh
 ssh-keygen -P '' -f /root/.ssh/id_rsa
 \cp /root/.ssh/id_rsa.pub /vagrant/puppet_provision/root_id_rsa.pub
 
-# ------------------------------------------------------------------------------
-# Next Step
-# PuppetDB
-# https://puppet.com/docs/puppetdb/7/install_via_module.html
-# ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# Firewall rules and PuppetDB
+# ------------------------------------------------------------------------------
+# becase puppetlabs-firewall and puppetlabs-postgresql are used by these and the examples, we need to place them in a global directory
+# rather than an environment specific directory so that they can both find them
+/opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/modules/ puppetlabs-firewall
+/opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/modules/ puppetlabs-puppetdb
+chown -R puppet:puppet /etc/puppetlabs/code/modules/
+cp -R /vagrant/puppet_provision/modules/puppet_local_fw/ /etc/puppetlabs/code/environments/production/modules/
+cp /vagrant/puppet_provision/manifests/puppet.local.pp /etc/puppetlabs/code/environments/production/manifests/
+/opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/puppet.local.pp
 
 # ------------------------------------------------------------------------------
 # Puppet Dev Code Setup
@@ -69,7 +71,8 @@ ssh-keygen -P '' -f /root/.ssh/id_rsa
 # If the example modules were linked via Vagrant, then we will need some 
 # additional modules installed, etc..
 if [ -d /etc/puppetlabs/code/environments/example/modules ] ; then
-  sudo /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/environments/example/modules/ puppetlabs-postgresql
-  sudo /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/environments/example/modules/ puppetlabs-firewall
-  chown -R puppet:puppet /etc/puppetlabs/code/environments/example/
+  # these will have been installed above, but leaving for reference
+  /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/modules/ puppetlabs-postgresql
+  /opt/puppetlabs/bin/puppet module install --target-dir /etc/puppetlabs/code/modules/ puppetlabs-firewall
+  chown -R puppet:puppet /etc/puppetlabs/code/modules/
 fi
